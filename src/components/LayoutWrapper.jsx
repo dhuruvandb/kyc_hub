@@ -55,13 +55,11 @@ export default function LayoutWrapper({ children }) {
           <Footer
             style={{
               textAlign: "center",
-              background: "#001529",
-              color: "#fff",
               width: "100%",
               zIndex: 1,
             }}
           >
-            Footer
+            &copy; {new Date().getFullYear()} KYC HUB. All rights reserved.
           </Footer>
         </Layout>
       </Layout>

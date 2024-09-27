@@ -83,6 +83,13 @@ export default function CompareProducts() {
         {}
       ),
     },
+    {
+      attribute: "Warranty Information",
+      ...compareItems.reduce(
+        (acc, item) => ({ ...acc, [item.id]: item.warrantyInformation }),
+        {}
+      ),
+    },
   ];
 
   const columns = [
@@ -121,7 +128,11 @@ export default function CompareProducts() {
         open={showPopUp}
         onOpenChange={() => setShowPopUp(true)}
       >
-        <Button value={"large"} disabled={compareItems.length >= 4}>
+        <Button
+          value={"large"}
+          disabled={compareItems.length >= 4}
+          type="primary"
+        >
           Add Products
         </Button>
       </Popover>

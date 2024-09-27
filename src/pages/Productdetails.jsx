@@ -1,46 +1,13 @@
 import { Button, Table, Tag } from "antd";
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { useLoaderData } from "react-router-dom";
 import { Context } from "../ContextApi";
 
 export default function ProductDetails() {
-  const [products, setProducts] = useState([]);
   const { addItemsToCompare, openNotification, darkTheme, compareItems } =
     useContext(Context);
-
+  const products = useLoaderData();
   let comparedProducts = new Set(compareItems.map((data) => data.id));
-
-  useEffect(() => {
-    axios
-      .get("https://dummyjson.com/products")
-      .then((res) => {
-        const data = res.data.products.map((data) => {
-          const {
-            id,
-            title,
-            description,
-            price,
-            discountPercentage,
-            brand,
-            category,
-            thumbnail,
-          } = data;
-          return {
-            id,
-            title,
-            description,
-            price,
-            discountPercentage,
-            brand,
-            category,
-            thumbnail,
-          };
-        });
-        setProducts([...products, ...data]);
-      })
-      .catch((e) => console.error(e));
-  }, []);
 
   const columns = [
     {
@@ -54,7 +21,7 @@ export default function ProductDetails() {
           style={{
             width: "100px",
             height: "100px",
-          }} // Adjust size as needed
+          }}
         />
       ),
     },
@@ -157,8 +124,10 @@ export default function ProductDetails() {
   ];
 
   const handleCompare = (record) => {
-    addItemsToCompare(record);
-    openNotification(record.title, "Added", "success");
+    if (!comparedProducts.has(record.id)) {
+      addItemsToCompare(record);
+      openNotification(record.title, "Added", "success");
+    }
   };
 
   return (
