@@ -1,17 +1,17 @@
 import "./App.css";
 import { createBrowserRouter, NavLink, RouterProvider } from "react-router-dom";
-import ProductDetails from "./pages/Productdetails";
-import CompareProducts from "./pages/Compareproducts";
+import { Suspense, lazy } from "react";
 import RootComponent from "./components/RootComponent";
 import LayoutWrapper from "./components/LayoutWrapper";
 import axios from "axios";
+
+const ProductDetails = lazy(() => import("./pages/Productdetails"));
+const CompareProducts = lazy(() => import("./pages/Compareproducts"));
 
 async function loader() {
   try {
     const res = await axios.get("https://dummyjson.com/products");
     const data = res.data.products.map((data) => {
-      console.log(data);
-
       const {
         id,
         title,
@@ -39,7 +39,7 @@ async function loader() {
         warrantyInformation,
       };
     });
-    return data; // Return the processed data
+    return data;
   } catch (error) {
     console.error(error);
     throw new Response("Error fetching products", { status: 500 });
@@ -61,7 +61,9 @@ function App() {
           path: "/",
           element: (
             <LayoutWrapper>
-              <ProductDetails />
+              <Suspense fallback={<div>Loading...</div>}>
+                <ProductDetails />
+              </Suspense>
             </LayoutWrapper>
           ),
           loader: loader,
@@ -70,7 +72,9 @@ function App() {
           path: "compare-products",
           element: (
             <LayoutWrapper>
-              <CompareProducts />
+              <Suspense fallback={<div>Loading...</div>}>
+                <CompareProducts />
+              </Suspense>
             </LayoutWrapper>
           ),
           loader: loader,
